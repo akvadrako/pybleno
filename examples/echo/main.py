@@ -3,7 +3,7 @@ import sys
 import signal
 from EchoCharacteristic import *
 
-print('bleno - echo');
+print('bleno - echo')
 
 bleno = Bleno()
 
@@ -18,7 +18,7 @@ def onStateChange(state):
 bleno.on('stateChange', onStateChange)
     
 def onAdvertisingStart(error):
-    print('on -> advertisingStart: ' + ('error ' + error if error else 'success'));
+    print('on -> advertisingStart: ' + ('error ' + str(error) if error else 'success'));
 
     if not error:
         bleno.setServices([

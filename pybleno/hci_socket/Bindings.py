@@ -48,8 +48,7 @@ class BlenoBindings:
 
     def disconnect(self):
         if self._handle:
-            # debug('disconnect by server')
-
+            print('disconnect by server')
             self._hci.disconnect(self._handle)
 
     def updateRssi(self):
@@ -61,7 +60,7 @@ class BlenoBindings:
 
         # process.on('SIGINT', self.onSigIntBinded)
         # process.on('exit', self.onExit)
-
+        print('hci', 'init')
         self._gap.on('advertisingStart', self.onAdvertisingStart)
         self._gap.on('advertisingStop', self.onAdvertisingStop)
 
@@ -145,7 +144,7 @@ class BlenoBindings:
         self._aclStream = None
 
         if (address):
-            self.emit('disconnect', [address])  # TODO: use reason
+            self.emit('disconnect', [address, reason])
 
         if (self._advertising):
             self._gap.restartAdvertising()

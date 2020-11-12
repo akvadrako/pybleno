@@ -31,6 +31,15 @@ See [examples folder](https://github.com/Adam-Langley/pybleno/blob/master/exampl
 
 See the original nodejs Bleno documentation for usage.
 
+### On Linux
+
+pybleno requires access to raw network sockets. That means you need to
+run your programs as root or do this first:
+
+```sh
+sudo setcap cap_net_raw+eip $(eval readlink -f `which python`)
+```
+
 ## Troubleshooting
  * Symptoms: Peripheral stops responding, notifications not going through - pi must be rebooted. Kernel log contains `hci0: Frame reassembly failed`
    * Cause: Bugs in bluetooth kernel module - manifests whe running Raspbian <= 2018-11-13. 

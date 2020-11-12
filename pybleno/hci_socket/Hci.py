@@ -27,7 +27,7 @@ class Hci:
         self.on('stateChange', self.onStateChange)
 
     def init(self):
-
+        print('hci', 'init')
         self._socket.on_data(self.onSocketData)
 
         self._socket.on_started(self.on_socket_started)
@@ -88,7 +88,7 @@ class Hci:
         writeUInt8(cmd, 0x00, 3)
 
         # debug('reset');
-        self.write_buffer(cmd)
+        self.write(cmd)
 
     def readLeHostSupported(self):
         cmd = array.array('B', [0] * 4)
@@ -216,8 +216,7 @@ class Hci:
         struct.pack_into("<BHBHHBBBIHBB", cmd, 0, HCI_COMMAND_PKT, LE_SET_ADVERTISING_PARAMETERS_CMD, 15,
                          advertisementInterval, advertisementInterval, 0x00, 0x00, 0x00, 0x00, 0x00, 0x07, 0x00)
 
-        # debug('set advertisement parameters - writing: ' + cmd.toString('hex'))
-        # print('set advertise parameters - writing: ' + `[hex(c) for c in cmd]`)
+        print('set advertise parameters - writing: ' + str([hex(c) for c in cmd]))
         self.write(cmd)
 
     def setAdvertisingData(self, data):
@@ -272,7 +271,7 @@ class Hci:
         writeUInt8(cmd, 0x01 if enabled else 0x00, 4)  # enable: 0 -> disabled, 1 -> enabled
         # struct.pack_into("<BHBB", cmd, 0, HCI_COMMAND_PKT, LE_SET_ADVERTISE_ENABLE_CMD, 0x01, 0x01 if enabled else 0x00 )
 
-        # debug('set advertise enable - writing: ' + cmd.toString('hex'))
+        print('set advertise enable')
         self.write(cmd)
 
     def disconnect(self, handle, reason=None):
@@ -326,13 +325,11 @@ class Hci:
         self.write(pkt)
 
     def write(self, pkt):
-        # print 'WRITING: %s' % ''.join(format(x, '02x') for x in pkt)
+        print('WRITING: %s' % ''.join(format(x, '02x') for x in pkt))
         self._socket.write(pkt)
 
     def onSocketData(self, data):
-        # print 'READING: %s' % ''.join(format(x, '02x') for x in data)
-        # print 'got data!'
-        # print [hex(c) for c in data]
+        # print('READING: %s' % ''.join(format(x, '02x') for x in data))
         # s = struct.Struct('B')
         # unpacked_data = s.unpack(data)
         # print char.from_bytes(data)
@@ -561,12 +558,7 @@ class Hci:
             self._isDevUp = isDevUp
             if isDevUp:
                 self.setSocketFilter()
-                self.setEventMask()
-                self.setLeEventMask()
-                self.readLocalVersion()
-                self.writeLeHostSupported()
-                self.readLeHostSupported()
-                self.readBdAddr()
+                self.reset()
             else:
                 self.emit('stateChange', ['poweredOff'])
 

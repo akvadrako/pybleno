@@ -23,7 +23,7 @@ class Gap:
 
     def startAdvertising(self, name, serviceUuids):
         # debug('startAdvertising: name = ' + name + ', serviceUuids = ' + JSON.stringify(serviceUuids, null, 2))
-
+        print('start-adv', 'gap')
         advertisementDataLength = 3
         scanDataLength = 0
 
@@ -98,7 +98,9 @@ class Gap:
             writeUInt8(scanData, 0x08, 1)
             copy(nameBuffer, scanData, 2)
 
+        print('gap', 'adv-ready')
         self.startAdvertisingWithEIRData(advertisementData, scanData)
+        print('gap', 'adv-done')
 
     def startAdvertisingIBeacon(self, data):
         # debug('startAdvertisingIBeacon: data = ' + data.toString('hex'))
@@ -185,7 +187,7 @@ class Gap:
             error = None
 
             if status:
-                error = Exception(Hci.STATUS_MAPPER[status] or ('Unknown (' + status + ')'))
+                error = Exception((Hci.STATUS_MAPPER[status] or 'Unknown') + ' (%i)' % status)
 
             self.emit('advertisingStart', [error])
         elif self._advertiseState == 'stopping':

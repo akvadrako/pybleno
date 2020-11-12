@@ -11,7 +11,7 @@ def off(self, event, handler):
 
 def emit(self, event, arguments):
     # print self._events
-    # print self._events[event]
+    print(event, arguments)
     handlers = self._events[event] if event in self._events else []
     for handler in handlers:
         handler(*arguments)

@@ -53,6 +53,7 @@ class Bleno:
         self._bindings.on('rssiUpdate', self.onRssiUpdate)
 
     def start(self):
+        print('start', self)
         self._bindings.init()
 
     def onPlatform(self, platform):
@@ -64,12 +65,11 @@ class Bleno:
         self.emit('stateChange', [state])
 
     def onAddressChange(self, address):
-        # debug('addressChange ' + address);
-
+        print('addressChange ' + address)
         self.address = address
 
     def onAccept(self, clientAddress):
-        # debug('accept ' + clientAddress);
+        print('accept ' + clientAddress)
         self.emit('accept', [clientAddress])
 
     def onMtuChange(self, mtu):
@@ -79,8 +79,8 @@ class Bleno:
 
         self.emit('mtuChange', [mtu])
 
-    def onDisconnect(self, clientAddress):
-        # debug('disconnect' + clientAddress);
+    def onDisconnect(self, clientAddress, reason):
+        print('disconnect: %s: %s' % (clientAddress, reason))
         self.emit('disconnect', [clientAddress])
 
     def startAdvertising(self, name, service_uuids=None, callback=None):
@@ -182,7 +182,7 @@ class Bleno:
         self.emit('servicesSet', [error])
 
     def disconnect(self):
-        # debug('disconnect');
+        print('disconnect')
         self._bindings.disconnect()
 
     def updateRssi(self, callback=None):
