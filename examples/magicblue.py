@@ -2,17 +2,31 @@
 """
 MagicBlue Peripheral Implementation
 
+For an example client implementation see:
+https://github.com/Betree/magicblue
+
+
 pip install pybleno
 """
 
 from pybleno import Characteristic, Bleno, BlenoPrimaryService, Descriptor
-import signal, array, struct, sys, traceback, os
+import signal, array, sys, traceback, os
+import time
+from struct import pack
 import codecs
+from urllib.request import urlopen
 
 DEVICE_NAME = 'LEDBLE-78628F99'
 
 os.environ['BLENO_DEVICE_NAME'] = DEVICE_NAME
 bleno = Bleno()
+
+def switch(name, state):
+    print('SWITCH', name, state)
+    try:
+        print('RESULT', urlopen(f'http://{name}.local/{state}', timeout=3).read().decode())
+    except Exception as e:
+        print('ERROR', e)
 
 class RGBChar(Characteristic):
     def __init__(self, uuid):
@@ -21,42 +35,67 @@ class RGBChar(Characteristic):
             'properties': ['write', 'writeWithoutResponse'],
             'value': None
         })
-          
-        self._value = array.array('B', [0] * 0)
+        self.on = False
  
-    def onReadRequest(self, offset, callback):
-        # Turn on: cc2333
-        # Turn off: cc2433
-        # 56 RR GG BB 00 f0 aa
-        # 56 00 00 00 WW 0f aa
-        # bb II (mode = 25 - 38) SS (speed, 1/200ms) 44
-
-        callback(Characteristic.RESULT_SUCCESS, self._value[offset:])
-
     def onWriteRequest(self, data, offset, withoutResponse, callback):
-        self._value = data
         print('RGB - onWriteRequest', tohex(data), repr(data))
         
+        if tohex(data) == 'cc2333':
+            self.on = True
+            switch('uitje', 'on')
+            switch('onion', 'on')
+        
+        if tohex(data) == 'cc2433':
+            self.on = False
+            switch('uitje', 'off')
+            switch('onion', 'off')
+        
+        # 56 00 00 00 WW 0f aa
+        if data[0] == 0x56 and data[5] == 0x0f:
+            print('WHITE', data[4])
+        
+        # 56 RR GG BB 00 f0 aa
+        if data[0] == 0x56 and data[5] == 0xf0:
+            print('RGB', data[1], data[2], data[3])
+        
+        # bb II (mode = 25 - 38) SS (speed, 1/200ms) 44
+        if data[0] == 0xbb:
+            print('EFFECT', data[1], data[2])
+
         # report device type
         if tohex(data) == 'ef0177':
-            #               66    on                temp
-            notify(fromhex('66 15 23 4a4102ff111100 0a 99'))
-            # 0x66
-            # val on = array[2] == 35
-            # val temp = array[9].toUInt()
+            print('TYPE', self.on)
+            notify(pack('12B',
+                0x66,
+                0x15,
+                0x23 if self.on else 0x00,
+                0x4a,  # effect no
+                0x41,  # effect
+                0x02,  # speed
+                0xff,  # red
+                0x11,  # green
+                0x11,  # blue
+                0x00,  # white
+                10,    # version
+                0x99,  # temp?
+            ))
 
         # report device time
         if tohex(data) == '121a1b21':
-            # 0x13 array.size == 11
-            #               13 ?  y  m  d  h  m  s  d  ?  31
-            notify(fromhex('13 14 14 0b 11 10 38 0c 02 00 31'))
-            #    val year = 2000 + array[2].toUInt()
-            #    val month = array[3].toUInt()
-            #    val day = array[4].toUInt()
-            #    val hour = array[5].toUInt()
-            #    val minute = array[6].toUInt()
-            #    val second = array[7].toUInt()
-            #    val dayOfWeek = array[8].toUInt()
+            print('TIME')
+            notify(pack('11B',
+                0x13,
+                0x14,
+                0,  # year - 2000
+                1,  # month (1-12)
+                1,  # day
+                0,  # hour
+                0,  # minute
+                0,  # second
+                1,  # weekday
+                0,
+                0x31,
+            ))
         
         callback(Characteristic.RESULT_SUCCESS)
 
@@ -78,22 +117,15 @@ class Notify(Characteristic):
             'uuid': uuid,
             'properties': ['notify'],
             'value': None,
-            'descriptors': [
-               # Descriptor({
-               #     'uuid': '2902',
-               #     'value': 'Notifications and indications disabled/enabled'
-               # }),
-            ]
+            'descriptors': [],
         })
           
     def onSubscribe(self, maxValueSize, updateValueCallback):
         print('Notify - onSubscribe')
-        self._updateValueCallback = updateValueCallback
         notify_me[0] = updateValueCallback
 
     def onUnsubscribe(self):
         print('Notify - onUnsubscribe')
-        self._updateValueCallback = None
 
 services = [
     # empty
@@ -135,8 +167,8 @@ bleno.on('stateChange', onStateChange)
 bleno.on('advertisingStart', onAdvertisingStart)
 bleno.start()
 
-import time
-time.sleep(3600)
+while True:
+    time.sleep(60)
 
 bleno.stopAdvertising()
 bleno.disconnect()

@@ -16,7 +16,14 @@ Effort has been made to maintain the same code structure to aid in parallel main
 __Note:__ Currently only tested on Linux Raspbian
 
 ## Prerequisites
+
 Please read the [original nodejs Bleno prerequisites](https://github.com/noble/bleno#prerequisites), failure to meet these may result in 'Operation not permitted' errors at runtime.
+
+Python must be compiled with support for Bluetooth or you will get errors like:
+
+```
+AttributeError: module 'socket' has no attribute 'AF_BLUETOOTH'
+```
 
 ## Install
 
@@ -43,6 +50,12 @@ run your programs as root or do this first:
 
 ```sh
 sudo setcap cap_net_raw+eip $(eval readlink -f `which python`)
+```
+## Docker
+
+```
+docker build -t pybleno .
+docker run --name pybleno --rm --privileged pybleno
 ```
 
 ## Troubleshooting

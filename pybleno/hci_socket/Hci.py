@@ -21,6 +21,8 @@ class Hci:
         self._isDevUp = None
         self._state = None
         self._deviceId = None
+        self.addressType = None
+        self.address = None
 
         self._handleBuffers = {}
 
@@ -140,6 +142,7 @@ class Hci:
         self.write(cmd)
 
     def readBdAddr(self):
+        print('readBdAddr')
         cmd = array.array('B', [0] * 4)
         # header
         writeUInt8(cmd, HCI_COMMAND_PKT, 0)
@@ -443,7 +446,6 @@ class Hci:
             self.readLocalVersion()
             self.writeLeHostSupported()
             self.readLeHostSupported()
-            self.readBdAddr()
         elif cmd == READ_LE_HOST_SUPPORTED_CMD:
             if status == 0:
                 le = readUInt8(result, 0)
@@ -465,6 +467,7 @@ class Hci:
                 self.setAdvertisingParameters()
 
             self.emit('readLocalVersion', [hciVer, hciRev, lmpVer, manufacturer, lmpSubVer])
+            self.readBdAddr()
 
         elif cmd == READ_BD_ADDR_CMD:
             self.addressType = 'public'
