@@ -81,7 +81,7 @@ class BluetoothHCISocketProvider:
         
         HCI_CHANNEL_RAW = 0
         HCI_CHANNEL_USER = 1
-        self._socket.bind_hci(self.device_id, HCI_CHANNEL_RAW)
+        self._socket.bind_hci(self.device_id, HCI_CHANNEL_USER)
         #self._socket2.bind_l2(0, "0B:D8:28:EB:27:B8", cid=ATT_CID, addr_type=1)
         #self._socket2.connect_l2(0, "0B:D8:28:EB:27:B8", cid=ATT_CID, addr_type=1)
 
@@ -93,7 +93,8 @@ class BluetoothHCISocketProvider:
         self._socket_poll_thread.start()
 
     def kernel_disconnect_workarounds(self, data):
-        #print 'PRE KERNEL WORKAROUND %d' % len(data)
+        # skip kernel disconnect workarounds on user channel
+        return
         
         def noop(value):
             return value
@@ -166,7 +167,9 @@ class BluetoothHCISocketProvider:
         # flt = bluez.hci_filter_new()
         # bluez.hci_filter_all_events(flt)
         # bluez.hci_filter_set_ptype(flt, bluez.HCI_EVENT_PKT)
-        self._socket.setsockopt( socket.SOL_HCI, socket.HCI_FILTER, data )   
+        
+        # does this work/is it needed with HCI_CHANNEL_USER ?
+        # self._socket.setsockopt( socket.SOL_HCI, socket.HCI_FILTER, data )   
         pass
         #self._socket.setsockopt(socket.SOL_HCI, socket.HCI_FILTER, data)
 
