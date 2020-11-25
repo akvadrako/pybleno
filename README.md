@@ -1,6 +1,11 @@
 # pybleno
 [![Downloads](https://pepy.tech/badge/pybleno)](https://pepy.tech/project/pybleno)
 
+**Fork notes (akvadrako/pybleno)**
+> - added a magicblue.py server example - pretend to be a lightbulb
+> - added `examples/client` from python-hci
+> - use `USER` HCI socket. This prevents the BlueZ stack in the kernel from interfering.
+
 A direct port of the Bleno bluetooth LE peripheral role library to Python2/3
 
 The logic of this library was originally written by Sandeep Mistry (https://github.com/sandeepmistry/bleno),

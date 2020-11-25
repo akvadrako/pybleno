@@ -33,12 +33,8 @@ bleno.on('advertisingStart', onAdvertisingStart)
 
 bleno.start()
 
-print ('Hit <ENTER> to disconnect')
-
-if (sys.version_info > (3, 0)):
-    input()
-else:
-    raw_input()
+import time
+time.sleep(3600)
 
 bleno.stopAdvertising()
 bleno.disconnect()

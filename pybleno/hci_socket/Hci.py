@@ -325,7 +325,7 @@ class Hci:
         self.write(pkt)
 
     def write(self, pkt):
-        print('WRITING: %s' % ''.join(format(x, '02x') for x in pkt))
+        # print('WRITING: %s' % ''.join(format(x, '02x') for x in pkt))
         self._socket.write(pkt)
 
     def onSocketData(self, data):
