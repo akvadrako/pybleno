@@ -1,10 +1,10 @@
-# pybleno
-[![Downloads](https://pepy.tech/badge/pybleno)](https://pepy.tech/project/pybleno)
-
 **Fork notes (akvadrako/pybleno)**
 > - added a magicblue.py server example - pretend to be a lightbulb
 > - added `examples/client` from python-hci
 > - use `USER` HCI socket. This prevents the BlueZ stack in the kernel from interfering.
+
+# pybleno
+[![Downloads](https://pepy.tech/badge/pybleno)](https://pepy.tech/project/pybleno)
 
 A direct port of the Bleno bluetooth LE peripheral role library to Python2/3
 
@@ -60,6 +60,11 @@ https://github.com/TheBubbleworks/python-hcipy
 
 ### Mike Ryan's BluetoothSocket taken from Python control for Leviton Decora Bluetooth switches
 https://github.com/mjg59/python-decora
+
+## Other related projects
+
+- https://github.com/acburigo/python-hci
+- https://github.com/Jumperr-labs/hci-protocol
 
 ## License
 
