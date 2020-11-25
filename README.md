@@ -55,7 +55,7 @@ sudo setcap cap_net_raw+eip $(eval readlink -f `which python`)
 
 ```
 docker build -t pybleno .
-docker run --name pybleno --rm --privileged pybleno
+docker run --name pybleno --rm --privileged --net=host pybleno
 ```
 
 ## Troubleshooting
