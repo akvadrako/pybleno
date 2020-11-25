@@ -5,6 +5,10 @@ import array
 from .Io import *
 from math import *
 
+def fromhex(b):
+    import codecs
+    return codecs.decode(b, 'hex')
+
 ATT_OP_ERROR = 0x01
 ATT_OP_MTU_REQ = 0x02
 ATT_OP_MTU_RESP = 0x03
@@ -93,7 +97,16 @@ class Gatt:
                                       'secure':      [],
                                       'value':       array.array('B', [0x80, 0x00]),
                                       'descriptors': []
-                                  }
+                                  },
+                                  {
+                                      # "Peripheral Preferred Connection Parameters"
+                                      'uuid':        '2a04',
+                                      'properties':  ['read'],
+                                      'secure':      [],
+                                      #'value':       array.array('B', fromhex(b'060006000000d007')),
+                                      'value':       array.array('B', [0] * 8),
+                                      'descriptors': []
+                                  },
                               ]
                           },
                           {
