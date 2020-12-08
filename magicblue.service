@@ -1,0 +1,10 @@
+[Unit]
+Description=Magic Blue
+
+[Service]
+WorkingDirectory=/root
+ExecStart=/usr/bin/env pybleno-magicblue
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
