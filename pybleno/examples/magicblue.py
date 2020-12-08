@@ -13,7 +13,8 @@ import signal, array, sys, traceback, os, socket, codecs, time
 from urllib.request import urlopen
 from struct import pack
 
-DEVICE_NAME = socket.gethostname()
+# the Android app only discovers devices with the magic prefix
+DEVICE_NAME = 'LEDBLE-%s' % socket.gethostname()
 os.environ['BLENO_DEVICE_NAME'] = DEVICE_NAME
 
 bleno = Bleno()
