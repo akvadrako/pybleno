@@ -9,14 +9,12 @@ pip install pybleno
 """
 
 from pybleno import Characteristic, Bleno, BlenoPrimaryService, Descriptor
-import signal, array, sys, traceback, os
-import time
-from struct import pack
-import codecs
+import signal, array, sys, traceback, os, socket, codecs, time
 from urllib.request import urlopen
+from struct import pack
 
-# DEVICE_NAME = 
-# os.environ['BLENO_DEVICE_NAME'] = DEVICE_NAME
+DEVICE_NAME = socket.gethostname()
+os.environ['BLENO_DEVICE_NAME'] = DEVICE_NAME
 
 bleno = Bleno()
 
