@@ -28,10 +28,16 @@ AttributeError: module 'socket' has no attribute 'AF_BLUETOOTH'
 ## Install
 
 ```sh
-pip install pybleno
+pip3 install https://github.com/akvadrako/pybleno
 ```
 
 ## Usage
+
+Run an example MagicBlue lightswitch server:
+
+```python
+pybleno-magicblue
+```
 
 ```python
 from pybleno import *

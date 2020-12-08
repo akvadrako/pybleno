@@ -5,7 +5,6 @@ MagicBlue Peripheral Implementation
 For an example client implementation see:
 https://github.com/Betree/magicblue
 
-
 pip install pybleno
 """
 
@@ -163,13 +162,17 @@ def onAdvertisingStart(error):
     print('on -> advertisingStart: ' + ('error ' + str(error) if error else 'success'))
     bleno.setServices(services)
 
-bleno.on('stateChange', onStateChange)
-bleno.on('advertisingStart', onAdvertisingStart)
-bleno.start()
+def main():
+    bleno.on('stateChange', onStateChange)
+    bleno.on('advertisingStart', onAdvertisingStart)
+    bleno.start()
 
-while True:
-    time.sleep(60)
+    while True:
+        time.sleep(60)
 
-bleno.stopAdvertising()
-bleno.disconnect()
+    bleno.stopAdvertising()
+    bleno.disconnect()
+
+if __name__ == '__main__':
+    main()
 
