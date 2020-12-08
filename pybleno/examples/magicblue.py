@@ -15,15 +15,15 @@ from struct import pack
 import codecs
 from urllib.request import urlopen
 
-DEVICE_NAME = 'LEDBLE-78628F99'
+# DEVICE_NAME = 
+# os.environ['BLENO_DEVICE_NAME'] = DEVICE_NAME
 
-os.environ['BLENO_DEVICE_NAME'] = DEVICE_NAME
 bleno = Bleno()
 
-def switch(name, state):
-    print('SWITCH', name, state)
+def switch(state):
+    print('SWITCH', state)
     try:
-        print('RESULT', urlopen(f'http://{name}.local/{state}', timeout=3).read().decode())
+        print('RESULT', urlopen('http://localhost/%s' % state, timeout=3).read().decode())
     except Exception as e:
         print('ERROR', e)
 
@@ -41,13 +41,11 @@ class RGBChar(Characteristic):
         
         if tohex(data) == 'cc2333':
             self.on = True
-            switch('uitje', 'on')
-            switch('onion', 'on')
+            switch('on')
         
         if tohex(data) == 'cc2433':
             self.on = False
-            switch('uitje', 'off')
-            switch('onion', 'off')
+            switch('off')
         
         # 56 00 00 00 WW 0f aa
         if data[0] == 0x56 and data[5] == 0x0f:

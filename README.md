@@ -28,7 +28,7 @@ AttributeError: module 'socket' has no attribute 'AF_BLUETOOTH'
 ## Install
 
 ```sh
-pip3 install https://github.com/akvadrako/pybleno
+pip3 install https://github.com/akvadrako/pybleno/archive/master.zip
 ```
 
 ## Usage
