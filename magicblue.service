@@ -3,7 +3,8 @@ Description=Magic Blue
 
 [Service]
 WorkingDirectory=/root
-ExecStart=/usr/bin/env pybleno-magicblue
+ExecStartPre=/bin/hciconfig hci0 down
+ExecStart=/usr/bin/env python3 -u /usr/local/bin/pybleno-magicblue
 Restart=always
 
 [Install]
